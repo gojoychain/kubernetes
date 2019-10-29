@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "explorer-testnet.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{ include "explorer-testnet.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "explorer-testnet.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

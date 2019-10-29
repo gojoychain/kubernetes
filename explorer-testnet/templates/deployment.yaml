@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "explorer-testnet.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{ include "explorer-testnet.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "explorer-testnet.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "explorer-testnet.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: {{ .Release.Name }}-config
+            - name: MIX_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: MIX_ENV
+                  name: {{ .Release.Name }}-config
+            - name: NETWORK
+              valueFrom:
+                configMapKeyRef:
+                  key: NETWORK
+                  name: {{ .Release.Name }}-config
+            - name: SUBNETWORK
+              valueFrom:
+                configMapKeyRef:
+                  key: SUBNETWORK
+                  name: {{ .Release.Name }}-config
+            - name: COIN
+              valueFrom:
+                configMapKeyRef:
+                  key: COIN
+                  name: {{ .Release.Name }}-config
+            - name: ETHEREUM_JSONRPC_VARIANT
+              valueFrom:
+                configMapKeyRef:
+                  key: ETHEREUM_JSONRPC_VARIANT
+                  name: {{ .Release.Name }}-config
+            - name: ETHEREUM_JSONRPC_HTTP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ETHEREUM_JSONRPC_HTTP_URL
+                  name: {{ .Release.Name }}-config
+            - name: ETHEREUM_JSONRPC_WS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ETHEREUM_JSONRPC_WS_URL
+                  name: {{ .Release.Name }}-config
+            - name: ETHEREUM_JSONRPC_TRACE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ETHEREUM_JSONRPC_TRACE_URL
+                  name: {{ .Release.Name }}-config
+            - name: ECTO_USE_SSL
+              valueFrom:
+                configMapKeyRef:
+                  key: ECTO_USE_SSL
+                  name: {{ .Release.Name }}-config
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: {{ .Release.Name }}-secrets
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  key: SECRET_KEY_BASE
+                  name: {{ .Release.Name }}-secrets
+            - name: GECCEX_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  key: GECCEX_APP_ID
+                  name: {{ .Release.Name }}-secrets
+            - name: GECCEX_CODE
+              valueFrom:
+                secretKeyRef:
+                  key: GECCEX_CODE
+                  name: {{ .Release.Name }}-secrets
+          ports:
+            - name: http
+              containerPort: 4000
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 240
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 240
+            periodSeconds: 10
