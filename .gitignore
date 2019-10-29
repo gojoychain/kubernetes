@@ -86,3 +86,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/helm,linux,macos,windows,visualstudiocode
+
+# Kubernetes
+**/secret*.yaml
