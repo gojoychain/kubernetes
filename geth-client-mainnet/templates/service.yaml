@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ include "geth-client-testnet.fullname" . }}
+  name: {{ include "geth-client-mainnet.fullname" . }}
   labels:
-    {{ include "geth-client-testnet.labels" . | nindent 4 }}
+    {{ include "geth-client-mainnet.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.geth.service.type }}
   ports:
@@ -21,5 +21,5 @@ spec:
       protocol: TCP
   {{- end }}
   selector:
-    app.kubernetes.io/name: {{ include "geth-client-testnet.name" . }}
+    app.kubernetes.io/name: {{ include "geth-client-mainnet.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "geth-client-mainnet.fullname" . }}
+  labels:
+    {{ include "geth-client-mainnet.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.geth.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "geth-client-mainnet.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "geth-client-mainnet.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: init-genesis
+          image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
+          imagePullPolicy: {{ .Values.geth.image.pullPolicy }}
+          command: ["geth", "init", "/root/.ethereum/genesis.json"]
+          volumeMounts:
+            - name: data
+              mountPath: /root/.ethereum
+            - name: config
+              mountPath: /root/.ethereum/genesis.json
+              subPath: genesis.json
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          env:
+            - name: NETWORK_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-config
+                  key: NETWORK_ID
+            - name: BOOTNODES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-config
+                  key: BOOTNODES
+          command: ["geth"]
+          args:
+            - --syncmode={{ .Values.geth.config.syncmode }}
+            - --gcmode={{ .Values.geth.config.gcmode }}
+            - --networkid=$(NETWORK_ID)
+            - --nat={{ .Values.geth.config.nat }}
+            - --targetgaslimit={{ .Values.geth.config.targetgaslimit }}
+          {{- if .Values.geth.config.rpc }}
+            - --rpc
+            - --rpcaddr={{ .Values.geth.config.rpcaddr }}
+            - --rpcport={{ .Values.geth.config.rpcport }}
+            - --rpccorsdomain={{ .Values.geth.config.rpccorsdomains }}
+            - --rpcvhosts={{ .Values.geth.config.rpcvhosts }}
+            - --rpcapi={{ .Values.geth.config.rpcapi }}
+          {{- end }}
+          {{- if .Values.geth.config.ws }}
+            - --ws
+            - --wsaddr={{ .Values.geth.config.wsaddr }}
+            - --wsport={{ .Values.geth.config.wsport }}
+            - --wsorigins={{ .Values.geth.config.wsorigins }}
+            - --wsapi={{ .Values.geth.config.wsapi }}
+          {{- end }}
+            - --verbosity={{ .Values.geth.config.verbosity }}
+            - --bootnodes=$(BOOTNODES)
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.geth.config.rpcport }}
+              protocol: TCP
+            - name: ws
+              containerPort: {{ .Values.geth.config.wsport }}
+              protocol: TCP
+            - name: discovery-udp
+              containerPort: 30303 
+              protocol: UDP
+            - name: discovery-tcp
+              containerPort: 30303
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /root/.ethereum
+            - name: config
+              mountPath: /root/.ethereum/geth/static-nodes.json
+              subPath: static-nodes.json
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if [ -e /root/.ethereum/geth.ipc ]; then exit 0; else exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if [ -e /root/.ethereum/geth.ipc ]; then exit 0; else exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 3
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+      {{- if not .Values.geth.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+      {{- end }}
+{{- if .Values.geth.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: {{ include "geth-client-mainnet.name" . }}
+          release: "{{ .Release.Name }}"
+          heritage: "{{ .Release.Service }}"
+          component: geth-client-mainnet
+      spec:
+        accessModes:
+          - {{ .Values.geth.persistence.accessMode | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.geth.persistence.size | quote }}
+    {{- if .Values.geth.persistence.storageClass }}
+      {{- if (eq "-" .Values.geth.persistence.storageClass) }}
+        storageClassName: ""
+      {{- else }}
+        storageClassName: "{{ .Values.geth.persistence.storageClass }}"
+      {{- end }}
+    {{- end }}
+{{- end }}
