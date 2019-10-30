@@ -6,7 +6,7 @@ metadata:
   labels:
     {{ include "geth-client-testnet.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.geth.service.type }}
   ports:
     {{- if .Values.geth.config.rpc }}
     - name: rpc
