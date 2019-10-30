@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-explorer
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - gojoychain.com
+        - testnet.gojoychain.com
+      secretName: gojoychain.com-tls
+  rules:
+    - host: gojoychain.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: explorer-mainnet
+              servicePort: 4000
+    - host: testnet.gojoychain.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: explorer-testnet
+              servicePort: 4000
