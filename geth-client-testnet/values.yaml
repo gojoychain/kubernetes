@@ -9,8 +9,7 @@ geth:
     tag: v1.8.23a
     pullPolicy: IfNotPresent
   service:
-    type: ClusterIP
-    port: 80
+    type: LoadBalancer
   config:
     # Blockchain sync mode ("fast", "full", or "light")
     syncmode: full
