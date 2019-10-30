@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "geth-client-testnet.fullname" . }}
+  labels:
+    {{ include "geth-client-testnet.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    {{- if .Values.geth.config.rpc }}
+    - name: rpc
+      port: {{ .Values.geth.config.rpcport }}
+      targetPort: rpc
+      protocol: TCP
+    {{- end }}
+    {{- if .Values.geth.config.ws }}
+    - name: ws
+      port: {{ .Values.geth.config.wsport }}
+      targetPort: ws
+      protocol: TCP
+    {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "geth-client-testnet.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

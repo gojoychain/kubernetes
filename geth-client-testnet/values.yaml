@@ -1,0 +1,58 @@
+# Default values for geth-client-testnet.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+geth:
+  replicaCount: 3
+  image:
+    repository: gojoychain/go-geth
+    tag: v1.8.23a
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  config:
+    # Blockchain sync mode ("fast", "full", or "light")
+    syncmode: full
+    # Blockchain garbage collection mode ("full", "archive") (default: "full")
+    gcmode: archive
+    # NAT port mapping mechanism (any|none|upnp|pmp|extip:<IP>) (default: "any")
+    nat: none
+    # Target gas floor for mined blocks (deprecated, use --miner.gastarget) (default: 8000000)
+    targetgaslimit: "4700000"
+    # Enable the HTTP-RPC server
+    rpc: true
+    # HTTP-RPC server listening interface (default: "localhost")
+    rpcaddr: "0.0.0.0"
+    # HTTP-RPC server listening port (default: 8545)
+    rpcport: 8545
+    # Comma separated list of domains from which to accept cross origin requests (browser enforced)
+    rpccorsdomains: "*"
+    # Comma separated list of virtual hostnames from which to accept requests (server enforced). Accepts '*' wildcard. (default: "localhost")
+    rpcvhosts: "*"
+    # API's offered over the HTTP-RPC interface
+    rpcapi: db,debug,eth,net,web3
+    # Enable the WS-RPC server
+    ws: true
+    # WS-RPC server listening interface (default: "localhost")
+    wsaddr: "0.0.0.0"
+    # WS-RPC server listening port (default: 8546)
+    wsport: 8546
+    # Origins from which to accept websockets requests
+    wsorigins: "*"
+    # API's offered over the WS-RPC interface
+    wsapi: db,debug,eth,net,web3
+    # Logging verbosity: 0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=detail (default: 3)
+    verbosity: 4
+  persistence:
+    enabled: true
+    ## geth data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 20Gi
