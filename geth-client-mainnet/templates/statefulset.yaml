@@ -75,7 +75,7 @@ spec:
               containerPort: {{ .Values.geth.config.wsport }}
               protocol: TCP
             - name: discovery-udp
-              containerPort: 30303 
+              containerPort: 30303
               protocol: UDP
             - name: discovery-tcp
               containerPort: 30303
