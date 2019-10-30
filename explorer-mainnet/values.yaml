@@ -1,0 +1,19 @@
+# Default values for explorer-testnet.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+namespace: default
+
+replicaCount: 3
+
+image:
+  repository: gojoychain/explorer
+  tag: 2.3.1
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 4000

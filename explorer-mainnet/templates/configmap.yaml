@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  PORT: "4000"
+  MIX_ENV: "prod"
+  NETWORK: "Gojoychain"
+  SUBNETWORK: "Mainnet"
+  COIN: "JOY"
+  ETHEREUM_JSONRPC_VARIANT: "geth"
+  ETHEREUM_JSONRPC_HTTP_URL: "https://api.gojoychain.com"
+  ETHEREUM_JSONRPC_WS_URL: "wss://api.gojoychain.com/ws"
+  ETHEREUM_JSONRPC_TRACE_URL: "https://api.gojoychain.com"
+  ECTO_USE_SSL: "true"
