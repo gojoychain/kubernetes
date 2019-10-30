@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-geth-client
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.gojoychain.com
+        - testapi.gojoychain.com
+      secretName: gojoychain.com-tls
+  rules:
+    - host: api.gojoychain.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: geth-client-mainnet
+              servicePort: 8545
+          - path: /ws
+            backend:
+              serviceName: geth-client-mainnet
+              servicePort: 8546
+    - host: testapi.gojoychain.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: geth-client-testnet
+              servicePort: 8545
+          - path: /ws
+            backend:
+              serviceName: geth-client-testnet
+              servicePort: 8546
