@@ -139,7 +139,7 @@ bodhi-pm-testnet  LoadBalancer  10.100.170.230  a0bb2dd5dc987...  5000:31487/TCP
 
 Deleting your deployment is easy. Just use the following command with the name of the deployment.
 
-**When you delete a deployment, you are deleting everything that comes with the Chart. If you are trying to just update the release/image. DO NOT DELETE, but [UPGRADE](#upgrade-chart).**
+**When you delete a deployment, you are deleting everything that comes with the Chart. If you are trying to just update the release/image. DO NOT DELETE, but [UPGRADE](#upgrade-deployment).**
 
 ```bash
 # helm del --purge deployment-name
