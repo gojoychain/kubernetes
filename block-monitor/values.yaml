@@ -1,0 +1,12 @@
+# Default values for block-monitor.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: default
+
+replicaCount: 1
+
+image:
+  repository: nakachain/block-monitor
+  tag: 1.0.2
+  pullPolicy: IfNotPresent

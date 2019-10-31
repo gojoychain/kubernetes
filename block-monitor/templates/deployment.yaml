@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "block-monitor.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{ include "block-monitor.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "block-monitor.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "block-monitor.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SLACK_WEBHOOK_PATH
+              valueFrom:
+                secretKeyRef:
+                  key: SLACK_WEBHOOK_PATH
+                  name: {{ .Release.Name }}-auth
+            - name: URLS
+              valueFrom:
+                configMapKeyRef:
+                  key: URLS
+                  name: {{ .Release.Name }}-config
+            - name: MONITOR_INTERVAL_MS
+              valueFrom:
+                configMapKeyRef:
+                  key: MONITOR_INTERVAL_MS
+                  name: {{ .Release.Name }}-config
+            - name: MESSAGE_INTERVAL_MS
+              valueFrom:
+                configMapKeyRef:
+                  key: MESSAGE_INTERVAL_MS
+                  name: {{ .Release.Name }}-config

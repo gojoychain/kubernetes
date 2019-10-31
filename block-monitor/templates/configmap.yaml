@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  URLS: "https://api.gojoychain.com,https://testapi.gojoychain.com"
+  MONITOR_INTERVAL_MS: "60000"
+  MESSAGE_INTERVAL_MS: "900000"
