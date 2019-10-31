@@ -48,9 +48,9 @@ Secrets need to be base64 encoded. Read [Creating a Secret Manually](https://kub
 
 Chart `version` and `appVersion` should be updated to match the Docker image version.
 
-## Charts
+## Deployment
 
-### Deploy New Chart
+### New Deployment
 
 Deploying a Chart is easy. Here's an example of deploying a chart:
 
@@ -97,7 +97,7 @@ bodhi-pm-testnet-6c4849558-cvcjt                 1/1     Running   0          14
 bodhi-pm-testnet-6c4849558-n9knj                 1/1     Running   0          14s
 ```
 
-### Upgrade Chart
+### Upgrade Deployment
 
 When you change the Chart and want to redeploy, you want to upgrade. Here's an example of an upgrade:
 
@@ -135,11 +135,11 @@ NAME              TYPE          CLUSTER-IP      EXTERNAL-IP       PORT(S)       
 bodhi-pm-testnet  LoadBalancer  10.100.170.230  a0bb2dd5dc987...  5000:31487/TCP  22h
 ```
 
-### Delete Chart
+### Delete Deployment
 
-Deleting your already deployed service is easy. Just use the following command with the name of the service.
+Deleting your deployment is easy. Just use the following command with the name of the deployment.
 
-**When you delete a Chart, you are deleting everything that comes with the Chart. If you are trying to just update the release/image. DO NOT DELETE, but [UPGRADE](#upgrade-chart).**
+**When you delete a deployment, you are deleting everything that comes with the Chart. If you are trying to just update the release/image. DO NOT DELETE, but [UPGRADE](#upgrade-chart).**
 
 ```bash
 # helm del --purge deployment-name
