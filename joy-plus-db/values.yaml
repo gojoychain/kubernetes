@@ -8,10 +8,10 @@ image:
 db:
   name: joy_plus
 
-root:
+# root:
   # password: passed by command line
 
-replication:
+# replication:
   # password: passed by command line
 
 master:
