@@ -1,0 +1,16 @@
+# Default values for joy-plus-backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: default
+
+replicaCount: 1
+
+image:
+  repository: gojoychain/joy-plus-backend
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 5555
