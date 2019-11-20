@@ -91,13 +91,26 @@ spec:
             - name: api
               containerPort: 5555
               protocol: TCP
+          volumeMounts:
+            - name: geth-client-volume
+              mountPath: /root/.joy
           livenessProbe:
-            tcpSocket:
-              port: api
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if [ -e /root/.joy/geth.ipc ]; then exit 0; else exit 1; fi
             initialDelaySeconds: 10
             periodSeconds: 10
           readinessProbe:
-            tcpSocket:
-              port: api
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if [ -e /root/.joy/geth.ipc ]; then exit 0; else exit 1; fi
             initialDelaySeconds: 10
             periodSeconds: 10
+      volumes:
+        - name: geth-client-volume
+          persistentVolumeClaim:
+            claimName: data-geth-client-testnet-0
