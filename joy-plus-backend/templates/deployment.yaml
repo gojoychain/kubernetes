@@ -72,10 +72,10 @@ spec:
                 secretKeyRef:
                   key: ADMIN_WALLET_PRIV_KEY
                   name: {{ .Release.Name }}-secrets
-            - name: ADMIN_KEY
+            - name: ADMIN_API_KEY
               valueFrom:
                 secretKeyRef:
-                  key: ADMIN_KEY
+                  key: ADMIN_API_KEY
                   name: {{ .Release.Name }}-secrets
             - name: API_KEY_SECRET
               valueFrom:
