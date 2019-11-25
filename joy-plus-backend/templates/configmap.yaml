@@ -8,4 +8,4 @@ data:
   WEB3_PROVIDER: "ipc"
   LOG_LEVEL: "debug"
   DB_HOST: "10.100.254.158"
-  DB_DATABASE: "joy_plus"
+  DB_DATABASE: "joy_plus_testnet"
