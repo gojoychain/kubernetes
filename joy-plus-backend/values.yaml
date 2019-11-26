@@ -8,7 +8,7 @@ replicaCount: 1
 
 image:
   repository: gojoychain/joy-plus-backend
-  tag: 0.6.1
+  tag: 0.6.2
   pullPolicy: IfNotPresent
 
 service:
