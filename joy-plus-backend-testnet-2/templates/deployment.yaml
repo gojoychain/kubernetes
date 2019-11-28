@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "joy-plus-backend-testnet-2.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{ include "joy-plus-backend-testnet-2.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "joy-plus-backend-testnet-2.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "joy-plus-backend-testnet-2.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NETWORK
+              valueFrom:
+                configMapKeyRef:
+                  key: NETWORK
+                  name: {{ .Release.Name }}-config
+            - name: WEB3_PROVIDER
+              valueFrom:
+                configMapKeyRef:
+                  key: WEB3_PROVIDER
+                  name: {{ .Release.Name }}-config
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOG_LEVEL
+                  name: {{ .Release.Name }}-config
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_HOST
+                  name: {{ .Release.Name }}-config
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_DATABASE
+                  name: {{ .Release.Name }}-config
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: DB_USER
+                  name: {{ .Release.Name }}-secrets
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: {{ .Release.Name }}-secrets
+            - name: ADMIN_WALLET_SEED
+              valueFrom:
+                secretKeyRef:
+                  key: ADMIN_WALLET_SEED
+                  name: {{ .Release.Name }}-secrets
+            - name: ADMIN_WALLET_PUB_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: ADMIN_WALLET_PUB_KEY
+                  name: {{ .Release.Name }}-secrets
+            - name: ADMIN_WALLET_PRIV_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: ADMIN_WALLET_PRIV_KEY
+                  name: {{ .Release.Name }}-secrets
+            - name: ADMIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: ADMIN_API_KEY
+                  name: {{ .Release.Name }}-secrets
+            - name: API_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: API_KEY_SECRET
+                  name: {{ .Release.Name }}-secrets
+            - name: PASSPORT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: PASSPORT_SECRET
+                  name: {{ .Release.Name }}-secrets
+          ports:
+            - name: api
+              containerPort: 5555
+              protocol: TCP
+          volumeMounts:
+            - name: geth-client-volume
+              mountPath: /root/.joy
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if [ -e /root/.joy/geth.ipc ]; then exit 0; else exit 1; fi
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if [ -e /root/.joy/geth.ipc ]; then exit 0; else exit 1; fi
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: geth-client-volume
+          persistentVolumeClaim:
+            claimName: data-geth-client-testnet-0

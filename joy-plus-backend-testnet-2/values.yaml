@@ -1,4 +1,4 @@
-# Default values for joy-plus-backend.
+# Default values for joy-plus-backend-testnet-2.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,7 +8,7 @@ replicaCount: 1
 
 image:
   repository: gojoychain/joy-plus-backend
-  tag: 0.6.3
+  tag: 0.7.25
   pullPolicy: IfNotPresent
 
 service:

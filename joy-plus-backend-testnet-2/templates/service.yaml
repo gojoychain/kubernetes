@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "joy-plus-backend-testnet-2.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{ include "joy-plus-backend-testnet-2.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: api
+      protocol: TCP
+      name: api
+  selector:
+    app.kubernetes.io/name: {{ include "joy-plus-backend-testnet-2.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
