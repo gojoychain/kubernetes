@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: "0.9.3"
-description: A Helm chart for Joy Plus Backend Testnet 2
-name: joy-plus-backend-testnet-2
-version: 0.9.3

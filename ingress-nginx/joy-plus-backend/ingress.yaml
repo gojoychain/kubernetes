@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - walletapi.gojoychain.com
-      secretName: gojoychain.com-tls
+        - wallet.joy.plus
+      secretName: joy.plus-tls
   rules:
-    - host: walletapi.gojoychain.com
+    - host: wallet.joy.plus
       http:
         paths:
           - path: /
