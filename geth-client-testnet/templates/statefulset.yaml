@@ -11,7 +11,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "geth-client-testnet.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  serviceName: {{ include "geth-client-testnet.name" . }}
+  serviceName: {{ include "geth-client-testnet.fullname" . }}
   template:
     metadata:
       labels:
