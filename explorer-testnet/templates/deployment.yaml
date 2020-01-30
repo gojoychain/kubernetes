@@ -99,10 +99,10 @@ spec:
           readinessProbe:
             tcpSocket:
               port: http
-            initialDelaySeconds: 240
+            initialDelaySeconds: 360
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: http
-            initialDelaySeconds: 240
+            initialDelaySeconds: 360
             periodSeconds: 10
